@@ -68,8 +68,6 @@ services:
     networks: ['ai_network']
     ports:
       - "80:80"
-    volumes:
-      - webserver_data:/usr/share/nginx/html:ro
     restart: unless-stopped
 
 
@@ -77,7 +75,6 @@ volumes:
   n8n_data:
   qdrant_data:
   postgres_data:
-  webserver_data:
 
 networks:
   ai_network:

@@ -88,9 +88,6 @@ function sendMessage() {
 
     // Send message to N8N webhook
     sendToN8N(message);
-
-    // Show typing indicator
-    showTypingIndicator();
 }
 
 function addMessageToChat(message, sender) {
@@ -119,17 +116,34 @@ function removeTypingIndicator() {
     }
 }
 
+function generateUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0,
+            v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+function getChatSessionId() {
+    let sessionId = sessionStorage.getItem('chatSessionId');
+
+    // If no session ID exists, generate one and store it
+    if (!sessionId) {
+        sessionId = generateUUID();
+        sessionStorage.setItem('chatSessionId', sessionId);
+        console.log('New chat session started:', sessionId); // For debugging
+    } else {
+        console.log('Continuing chat session:', sessionId); // For debugging
+    }
+    return sessionId;
+}
+
 async function sendToN8N(message) {
     try {
-        // Check if webhook URL is configured
-        if (N8N_WEBHOOK_URL === '__N8N_WEBHOOK_URL__') {
-            // Simulate response for demo purposes
-            setTimeout(() => {
-                removeTypingIndicator();
-                addMessageToChat('Thank you for your message! This is a demo response. To connect this to your n8n workflow, please replace the webhook URL in the script.js file.', 'bot');
-            }, 1500);
-            return;
-        }
+        showTypingIndicator();
+
+        // Get the session ID (will create if it doesn't exist)
+        const sessionId = getChatSessionId();
 
         const response = await fetch(N8N_WEBHOOK_URL, {
             method: 'POST',
@@ -140,22 +154,23 @@ async function sendToN8N(message) {
                 message: message,
                 timestamp: new Date().toISOString(),
                 source: 'website_chat',
-                page: window.location.pathname
+                page: window.location.pathname,
+                sessionId: sessionId // <-- ADD THIS LINE to send the session ID
             })
         });
 
         if (response.ok) {
             const data = await response.json();
+
             removeTypingIndicator();
-            
-            // Handle response from n8n
-            if (data.reply) {
-                addMessageToChat(data.reply, 'bot');
+
+            if (data[0].output.chatMessage) {
+                addMessageToChat(data[0].output.chatMessage, 'bot');
             } else {
                 addMessageToChat('Thank you for your message! We will get back to you soon.', 'bot');
             }
         } else {
-            throw new Error('Failed to send message');
+            throw new Error(`Failed to send message: ${response.status} ${response.statusText}`);
         }
     } catch (error) {
         console.error('Error sending message to n8n:', error);

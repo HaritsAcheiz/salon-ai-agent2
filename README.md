@@ -3,6 +3,38 @@
 I want to make an appointment at 9 AM 2025, June 2 to get haircut
 myname is harits and my email harits.muhammad.only@gmail.com.
 c3071e82a0184e119f64ab70f07e8bb8
+[
+  {
+    "headers": {
+      "host": "localhost:5678",
+      "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0",
+      "accept": "*/*",
+      "accept-language": "en-US,en;q=0.5",
+      "accept-encoding": "gzip, deflate, br, zstd",
+      "referer": "http://localhost/",
+      "content-type": "application/json",
+      "content-length": "90",
+      "origin": "http://localhost",
+      "dnt": "1",
+      "sec-gpc": "1",
+      "connection": "keep-alive",
+      "sec-fetch-dest": "empty",
+      "sec-fetch-mode": "cors",
+      "sec-fetch-site": "same-site",
+      "priority": "u=0"
+    },
+    "params": {},
+    "query": {},
+    "body": {
+      "message": "Hi",
+      "timestamp": "2025-06-28T20:51:11.166Z",
+      "source": "website_chat",
+      "page": "/"
+    },
+    "webhookUrl": "http://localhost:5678/webhook/webserver",
+    "executionMode": "production"
+  }
+]
 
 # ================================ Main Agent Used =============================================
 You're Sarah, the friendly virtual assistant for Bella Beauty Salon. Provide exceptional customer service that feels personal and natural.
